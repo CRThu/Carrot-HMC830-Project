@@ -1,0 +1,25 @@
+Added Component: Designator=M1(M3-3.2X5)
+Add component. Clean all parameters for all variants
+Added Component: Designator=M2(M3-3.2X5)
+Add component. Clean all parameters for all variants
+Added Component: Designator=M3(M3-3.2X5)
+Add component. Clean all parameters for all variants
+Added Component: Designator=M4(M3-3.2X5)
+Add component. Clean all parameters for all variants
+Added Member To Class: ClassName=202004A830 Member=Component C10 Cap
+Added Member To Class: ClassName=202004A830 Member=Component C11 Cap
+Added Member To Class: ClassName=202004A830 Member=Component C12 Cap
+Added Member To Class: ClassName=202004A830 Member=Component C13 Cap
+Added Member To Class: ClassName=202004A830 Member=Component C16 Cap
+Added Member To Class: ClassName=202004A830 Member=Component C17 Cap
+Added Member To Class: ClassName=202004A830 Member=Component C20 Cap
+Added Member To Class: ClassName=202004A830 Member=Component C22 Cap
+Added Member To Class: ClassName=202004A830 Member=Component C25 Cap
+Added Member To Class: ClassName=202004A830 Member=Component C27 Cap
+Added Member To Class: ClassName=202004A830 Member=Component C29 Cap
+Added Member To Class: ClassName=202004A830 Member=Component C30 Cap
+Added Member To Class: ClassName=202004A830 Member=Component M1 M3
+Added Member To Class: ClassName=202004A830 Member=Component M2 M3
+Added Member To Class: ClassName=202004A830 Member=Component M3
+Added Member To Class: ClassName=202004A830 Member=Component M4 M3
+Added Room: Name=202004A830

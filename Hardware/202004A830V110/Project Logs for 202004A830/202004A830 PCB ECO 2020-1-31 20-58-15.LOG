@@ -1,0 +1,18 @@
+Removed Pin From Net: NetName=GND Pin=P1-1
+Removed Pin From Net: NetName=+5V Pin=P1-6
+Added Pin To Net: NetName=+5V Pin=P1-1
+Added Pin To Net: NetName=GND Pin=P1-6
+Added Pin To Net: NetName=HMC830_SCK Pin=P1-3
+Added Pin To Net: NetName=HMC830_SCK Pin=RN1-7
+Added Net: Name=HMC830_SCK
+Added Pin To Net: NetName=HMC830_SDI Pin=P1-4
+Added Pin To Net: NetName=HMC830_SDI Pin=RN1-6
+Added Net: Name=HMC830_SDI
+Added Pin To Net: NetName=HMC830_SDO Pin=LED1-1
+Added Pin To Net: NetName=HMC830_SDO Pin=P1-2
+Added Pin To Net: NetName=HMC830_SDO Pin=RN1-8
+Added Net: Name=HMC830_SDO
+Added Pin To Net: NetName=HMC830_SEN Pin=P1-5
+Added Pin To Net: NetName=HMC830_SEN Pin=RN1-5
+Added Net: Name=HMC830_SEN
+Added Room: Name=202004A830

@@ -1,0 +1,26 @@
+Added Component: Designator=U1(HMC830)
+Add component. Clean all parameters for all variants
+Added Pin To Net: NetName=HMC830_3V3 Pin=U1-1
+Added Pin To Net: NetName=NetC1_2 Pin=U1-3
+Added Pin To Net: NetName=NetC17_1 Pin=U1-4
+Added Pin To Net: NetName=NetC1_2 Pin=U1-7
+Added Pin To Net: NetName=HMC830_3V3 Pin=U1-10
+Added Pin To Net: NetName=XREFP Pin=U1-15
+Added Pin To Net: NetName=NetC12_2 Pin=U1-16
+Added Pin To Net: NetName=HMC830_3V3 Pin=U1-17
+Added Pin To Net: NetName=NetC20_1 Pin=U1-23
+Added Pin To Net: NetName=NetC4_2 Pin=U1-25
+Added Pin To Net: NetName=NetC4_2 Pin=U1-27
+Added Pin To Net: NetName=NetC15_2 Pin=U1-28
+Added Pin To Net: NetName=NetC16_2 Pin=U1-29
+Added Pin To Net: NetName=NetRN1_4 Pin=U1-30
+Added Pin To Net: NetName=NetRN1_3 Pin=U1-31
+Added Pin To Net: NetName=NetRN1_2 Pin=U1-32
+Added Pin To Net: NetName=NetRN1_1 Pin=U1-33
+Added Pin To Net: NetName=HMC830_3V3 Pin=U1-35
+Added Pin To Net: NetName=HMC830_3V3 Pin=U1-36
+Added Pin To Net: NetName=HMC830_3V3 Pin=U1-39
+Added Pin To Net: NetName=NetC14_2 Pin=U1-40
+Added Pin To Net: NetName=GND Pin=U1-41
+Added Member To Class: ClassName=202004A830 Member=Component U1 HMC830
+Added Room: Name=202004A830

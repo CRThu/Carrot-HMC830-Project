@@ -1,0 +1,17 @@
+Removed Pin From Net: NetName=NetLED1_1 Pin=RN1-5
+Removed Pin From Net: NetName=NetP1_4 Pin=RN1-6
+Removed Pin From Net: NetName=NetP1_3 Pin=RN1-7
+Removed Pin From Net: NetName=NetP1_2 Pin=RN1-8
+Removed Pin From Net: NetName=NetRN1_1 Pin=U1-30
+Removed Pin From Net: NetName=NetRN1_2 Pin=U1-31
+Removed Pin From Net: NetName=NetRN1_3 Pin=U1-32
+Removed Pin From Net: NetName=NetRN1_4 Pin=U1-33
+Added Pin To Net: NetName=NetP1_2 Pin=RN1-5
+Added Pin To Net: NetName=NetP1_3 Pin=RN1-6
+Added Pin To Net: NetName=NetP1_4 Pin=RN1-7
+Added Pin To Net: NetName=NetLED1_1 Pin=RN1-8
+Added Pin To Net: NetName=NetRN1_4 Pin=U1-30
+Added Pin To Net: NetName=NetRN1_3 Pin=U1-31
+Added Pin To Net: NetName=NetRN1_2 Pin=U1-32
+Added Pin To Net: NetName=NetRN1_1 Pin=U1-33
+Added Room: Name=202004A830
