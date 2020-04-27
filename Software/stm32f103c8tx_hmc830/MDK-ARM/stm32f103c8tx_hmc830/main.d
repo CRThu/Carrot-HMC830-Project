@@ -41,3 +41,4 @@ stm32f103c8tx_hmc830\main.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc
 stm32f103c8tx_hmc830\main.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h
 stm32f103c8tx_hmc830\main.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h
 stm32f103c8tx_hmc830\main.o: ..\HMC830\hmc830.h
+stm32f103c8tx_hmc830\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h

@@ -28,3 +28,4 @@ stm32f103c8tx_hmc830\hmc830.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal
 stm32f103c8tx_hmc830\hmc830.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pcd.h
 stm32f103c8tx_hmc830\hmc830.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_usb.h
 stm32f103c8tx_hmc830\hmc830.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pcd_ex.h
+stm32f103c8tx_hmc830\hmc830.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
