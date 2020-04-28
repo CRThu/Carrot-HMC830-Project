@@ -36,51 +36,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-void HMC830_Test_25M(void)
-{
-    HMC830_HMC_Write_REFDIV(1);
-    HMC830_HMC_Write_PFD_General_Setting(HMC830_INTEGER_MODE);
-    HMC830_HMC_Write_Charge_Pump_Current(2.54, HMC830_INTEGER_MODE, 1550, 50);
-    HMC830_HMC_Write_VCO_General_Setting(62, HMC830_VCO_REG02H_GAIN_3);
-    HMC830_HMC_Write_NDIV(31.0);
-}
 
-void HMC830_Test_35M(void)
-{
-    HMC830_HMC_Write_REFDIV(1);
-    HMC830_HMC_Write_PFD_General_Setting(HMC830_FRACTIONAL_MODE);
-    HMC830_HMC_Write_Charge_Pump_Current(2.54, HMC830_FRACTIONAL_MODE, 2170, 50);
-    HMC830_HMC_Write_VCO_General_Setting(62, HMC830_VCO_REG02H_GAIN_3);
-    HMC830_HMC_Write_NDIV(43.4);
-}
-
-
-void HMC830_Test_100M(void)
-{
-    HMC830_HMC_Write_REFDIV(1);
-    HMC830_HMC_Write_PFD_General_Setting(HMC830_INTEGER_MODE);
-    HMC830_HMC_Write_Charge_Pump_Current(2.54, HMC830_INTEGER_MODE, 3000, 50);
-    HMC830_HMC_Write_VCO_General_Setting(30, HMC830_VCO_REG02H_GAIN_3);
-    HMC830_HMC_Write_NDIV(60.0);
-}
-
-void HMC830_Test_425M(void)
-{
-    HMC830_HMC_Write_REFDIV(1);
-    HMC830_HMC_Write_PFD_General_Setting(HMC830_INTEGER_MODE);
-    HMC830_HMC_Write_Charge_Pump_Current(2.54, HMC830_INTEGER_MODE, 2550, 50);
-    HMC830_HMC_Write_VCO_General_Setting(6, HMC830_VCO_REG02H_GAIN_3);
-    HMC830_HMC_Write_NDIV(51.0);
-}
-
-void HMC830_Test_650M(void)
-{
-    HMC830_HMC_Write_REFDIV(1);
-    HMC830_HMC_Write_PFD_General_Setting(HMC830_INTEGER_MODE);
-    HMC830_HMC_Write_Charge_Pump_Current(2.54, HMC830_INTEGER_MODE, 2600, 50);
-    HMC830_HMC_Write_VCO_General_Setting(4, HMC830_VCO_REG02H_GAIN_3);
-    HMC830_HMC_Write_NDIV(52.0);
-}
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -102,7 +58,7 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+uint32_t dump_memory[0x13+1];
 /* USER CODE END 0 */
 
 /**
@@ -136,30 +92,32 @@ int main(void)
   MX_GPIO_Init();
   MX_USB_DEVICE_Init();
   /* USER CODE BEGIN 2 */
-  
     HMC830_Init(HMC830_HMC_MODE);
-    //HMC830_Test_25M();
     //HMC830_Test_35M();
     //HMC830_Test_100M();
-    HMC830_Test_425M();
+    //HMC830_Test_425M();
     //HMC830_Test_650M();
     
     //HMC830_HMC_Write_Output_Mode(HMC830_OUTPUT_DIFFERENTIAL_MODE);
-    HMC830_HMC_Write_Output_Mode(HMC830_OUTPUT_SINGLE_ENDED_MODE);
+    //HMC830_HMC_Write_Output_Mode(HMC830_OUTPUT_SINGLE_ENDED_MODE);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+    HMC830_HMC_Write_Freq(50, 1, 345.678, 2.54);
+    
+    HAL_Delay(1);
+      
     uint32_t id = HMC830_HMC_Read_Chip_ID();
     uint32_t lock = HMC830_HMC_Read_Lock_Detect();
       
-    char UserTxBuffer[32];
+    char UserTxBuffer[64];
     memset(UserTxBuffer, 0, sizeof(UserTxBuffer));
       sprintf(UserTxBuffer,"HMC830 ID:0x%X\r\nLD:%s\r\n", id, lock == HMC830_LOCKED ? "LOCKED" : "UNLOCKED");
     CDC_Transmit_FS((uint8_t*)UserTxBuffer,sizeof(UserTxBuffer));
-      
+    
     HAL_Delay(1000);
     /* USER CODE END WHILE */
 

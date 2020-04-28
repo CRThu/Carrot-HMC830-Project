@@ -39,7 +39,7 @@ extern "C" {
 #define HMC830_SDI(x)   HAL_GPIO_WritePin(GPIOA, HMC830_SDI_Pin, ((x)==0 ? GPIO_PIN_RESET : GPIO_PIN_SET))
 #define HMC830_SDO      ((HAL_GPIO_ReadPin(GPIOA, HMC830_SDO_Pin) == GPIO_PIN_RESET)? 0 : 1)
 
-// HMC830 PFD Mode
+// HMC830 Mode
 #define HMC830_INTEGER_MODE                                 0
 #define HMC830_FRACTIONAL_MODE                              1
 #define HMC830_OUTPUT_DIFFERENTIAL_MODE                     0
@@ -50,8 +50,11 @@ extern "C" {
 // HMC830 REGISTER MAP
 #define HMC830_REG00H_ID                                    0x00
 #define HMC830_REG00H_CHIP_ID_MASK                          0x00FFFFFF
+#define HMC830_REG00H_CHIP_ID_OFFSET                        0
 #define HMC830_REG00H_READ_ADDRESS_MASK                     0x0000001F
+#define HMC830_REG00H_READ_ADDRESS_OFFSET                   0
 #define HMC830_REG00H_SOFT_RESET_MASK                       0x00000020
+#define HMC830_REG00H_SOFT_RESET_OFFSET                     5
 #define HMC830_REG00H_CHIP_ID                               0xA7975
 
 #define HMC830_REG01H_ENABLE                                0x01
@@ -66,11 +69,13 @@ extern "C" {
 
 #define HMC830_REG02H_REFDIV                                0x02
 #define HMC830_REG02H_RDIV_MASK                             0x00003FFF
+#define HMC830_REG02H_RDIV_OFFSET                           0
 #define HMC830_REG02H_RDIV_MIN                              1
 #define HMC830_REG02H_RDIV_MAX                              16383
 
 #define HMC830_REG03H_INTEGER_PART                          0x03
 #define HMC830_REG03H_INTG_MASK                             0x0007FFFF
+#define HMC830_REG03H_INTG_OFFSET                           0
 #define HMC830_REG03H_INTG_FACTIONAL_MIN                    20
 #define HMC830_REG03H_INTG_FACTIONAL_MAX                    524284
 #define HMC830_REG03H_INTG_INTEGER_MIN                      16
@@ -78,6 +83,7 @@ extern "C" {
 
 #define HMC830_REG04H_FRACTIONAL_PART                       0x04
 #define HMC830_REG04H_FRAC_MASK                             0x00FFFFFF
+#define HMC830_REG04H_FRAC_OFFSET                           0
 #define HMC830_REG04H_FRAC_MIN                              0
 #define HMC830_REG04H_FRAC_MAX                              16777215
 
@@ -235,7 +241,7 @@ extern "C" {
 #define HMC830_VCO_REG05H_RECOMMAND                         0x1628
 
 #define HMC830_VCO_REG06H                                   0x6
-#define HMC830_VCO_REG05H_DEFAULT                           0x7FB0
+#define HMC830_VCO_REG06H_DEFAULT                           0x7FB0
 
 
 // FUNCTION PROTOTYPES
@@ -246,14 +252,25 @@ uint32_t HMC830_HMC_Read(uint8_t address);                  // HMC Mode Read
 
 void HMC830_HMC_VCO_Write(uint8_t vco_address,uint32_t data);   // HMC Mode VCO SubSystem Write
 
-uint32_t HMC830_HMC_Read_Chip_ID(void);
 void HMC830_HMC_Write_REFDIV(uint16_t refdiv);
 void HMC830_HMC_Write_NDIV(double ndiv);
 void HMC830_HMC_Write_VCO_General_Setting(uint8_t kdiv, uint8_t GAIN);
 void HMC830_HMC_Write_PFD_General_Setting(uint8_t PFD_MODE);
 void HMC830_HMC_Write_Charge_Pump_Current(float Icp, uint8_t PFD_MODE, uint16_t fVCO, uint16_t fPFD);
 void HMC830_HMC_Write_Output_Mode(uint8_t OUTPUT_MODE);
+
+uint32_t HMC830_HMC_Read_Chip_ID(void);
 uint8_t HMC830_HMC_Read_Lock_Detect(void);
+uint16_t HMC830_HMC_Read_REFDIV(void);
+double HMC830_HMC_Read_NDIV(void);
+
+void HMC830_HMC_Write_Freq(double fREF, uint16_t REFDIV, double fOUT, float Icp);
+
+void HMC830_HMC_Test_Dump_Register(uint32_t * dump);
+void HMC830_HMC_Test_REF50M_35M(void);
+void HMC830_HMC_Test_REF50M_100M(void);
+void HMC830_HMC_Test_REF50M_425M(void);
+void HMC830_HMC_Test_REF50M_650M(void);
 
 #ifdef __cplusplus
 }

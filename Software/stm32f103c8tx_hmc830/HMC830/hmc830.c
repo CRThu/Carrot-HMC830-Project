@@ -159,11 +159,6 @@ void HMC830_HMC_VCO_Write(uint8_t vco_address,uint32_t vco_data)
     HMC830_HMC_Write(HMC830_REG05H_VCO_SPI, data);
 }
 
-uint32_t HMC830_HMC_Read_Chip_ID(void)
-{
-    return HMC830_REG00H_CHIP_ID_MASK & HMC830_HMC_Read(HMC830_REG00H_ID);
-}
-
 void HMC830_HMC_Write_REFDIV(uint16_t refdiv)
 {
     uint32_t data = 0x000000;
@@ -173,7 +168,7 @@ void HMC830_HMC_Write_REFDIV(uint16_t refdiv)
     if(refdiv < HMC830_REG02H_RDIV_MIN)
         refdiv = HMC830_REG02H_RDIV_MIN;
     
-    data = HMC830_REG02H_RDIV_MASK & refdiv;
+    data = HMC830_REG02H_RDIV_MASK & (refdiv << HMC830_REG02H_RDIV_OFFSET);
     
     HMC830_HMC_Write(HMC830_REG02H_REFDIV, data);
 }
@@ -208,8 +203,8 @@ void HMC830_HMC_Write_NDIV(double ndiv)
             ndiv_fractional = HMC830_REG04H_FRAC_MIN;
     }
     
-    data_intg = HMC830_REG03H_INTG_MASK & ndiv_integer;
-    data_frac = HMC830_REG04H_FRAC_MASK & ndiv_fractional;
+    data_intg = HMC830_REG03H_INTG_MASK & (ndiv_integer << HMC830_REG03H_INTG_OFFSET);
+    data_frac = HMC830_REG04H_FRAC_MASK & (ndiv_fractional << HMC830_REG04H_FRAC_OFFSET);
     
     HMC830_HMC_Write(HMC830_REG03H_INTEGER_PART, data_intg);
     HMC830_HMC_Write(HMC830_REG04H_FRACTIONAL_PART, data_frac);
@@ -308,8 +303,104 @@ void HMC830_HMC_Write_Output_Mode(uint8_t OUTPUT_MODE)
     HMC830_HMC_Write(HMC830_REG0AH_VCO_AUTOCAL_CFG, 0x2046);
 }
 
+uint32_t HMC830_HMC_Read_Chip_ID(void)
+{
+    return (HMC830_REG00H_CHIP_ID_MASK & HMC830_HMC_Read(HMC830_REG00H_ID)) >> HMC830_REG00H_CHIP_ID_OFFSET;
+}
+
 uint8_t HMC830_HMC_Read_Lock_Detect(void)
 {
     uint32_t data = HMC830_HMC_Read(HMC830_REG12H_GPO2);
     return (HMC830_REG12H_LOCK_DETECT_MASK & data) >> HMC830_REG12H_LOCK_DETECT_OFFSET;
+}
+
+uint16_t HMC830_HMC_Read_REFDIV(void)
+{
+    return (HMC830_REG02H_RDIV_MASK & HMC830_HMC_Read(HMC830_REG02H_REFDIV)) >> HMC830_REG02H_RDIV_OFFSET;
+}
+
+double HMC830_HMC_Read_NDIV(void)
+{
+    uint32_t data_intg = (HMC830_REG03H_INTG_MASK & HMC830_HMC_Read(HMC830_REG03H_INTEGER_PART)) >> HMC830_REG03H_INTG_OFFSET;
+    uint32_t data_frac = (HMC830_REG04H_FRAC_MASK & HMC830_HMC_Read(HMC830_REG04H_FRACTIONAL_PART)) >> HMC830_REG04H_FRAC_OFFSET;
+    return (double)data_intg + (double)data_frac / 16777216.0;
+}
+
+void HMC830_HMC_Write_Freq(double fREF, uint16_t REFDIV, double fOUT, float Icp)
+{
+    // fREF = fREF
+    // fOUT = fOUT
+    // fPFD = fREF / REFDIV
+    // fVCO = fREF / REFDIV * NDIV
+    // fOUT = fVCO / KDIV
+    
+    uint8_t KDIV = 0;
+    double fVCO = 0;
+    double NDIV = 0;
+    uint8_t PFD_MODE = 0;
+    
+    // kdiv = fVCO / fOUT (Estimate)
+    uint16_t fvco_div_fout = 0;
+    if(fOUT >= 1500 && fOUT <= 3000)
+        fvco_div_fout = 1;
+    else    // kdiv = fVCO(max) / fOUT
+        fvco_div_fout = ((uint16_t)(3000.0 / fOUT) % 2) ? (uint16_t)(3000.0 / fOUT) - 1 : (uint16_t)(3000.0 / fOUT);
+    
+    KDIV = (fvco_div_fout > 62) ? 62 : fvco_div_fout;
+    fVCO = fOUT * (double)KDIV;
+    NDIV = fVCO / fREF * (double)REFDIV;
+    
+    uint32_t ndiv_integer = (uint32_t)NDIV;
+    if(NDIV == (double)ndiv_integer)
+        PFD_MODE = HMC830_INTEGER_MODE;
+    else
+        PFD_MODE = HMC830_FRACTIONAL_MODE;
+    
+    HMC830_HMC_Write_REFDIV(REFDIV);
+    HMC830_HMC_Write_PFD_General_Setting(PFD_MODE);
+    HMC830_HMC_Write_Charge_Pump_Current(Icp, PFD_MODE, fVCO, fREF / (double)REFDIV);
+    HMC830_HMC_Write_VCO_General_Setting(KDIV, HMC830_VCO_REG02H_GAIN_3);
+    HMC830_HMC_Write_NDIV(NDIV);
+}
+
+void HMC830_HMC_Test_Dump_Register(uint32_t * dump_memory)
+{
+    for(uint8_t reg = 0x00; reg <= 0x13; reg++)
+       dump_memory[reg] = (reg << 24) | (HMC830_HMC_Read(reg) << 0);
+}
+
+void HMC830_HMC_Test_REF50M_35M(void)
+{
+    HMC830_HMC_Write_REFDIV(1);
+    HMC830_HMC_Write_PFD_General_Setting(HMC830_FRACTIONAL_MODE);
+    HMC830_HMC_Write_Charge_Pump_Current(2.54, HMC830_FRACTIONAL_MODE, 2170, 50);
+    HMC830_HMC_Write_VCO_General_Setting(62, HMC830_VCO_REG02H_GAIN_3);
+    HMC830_HMC_Write_NDIV(43.4);
+}
+
+void HMC830_HMC_Test_REF50M_100M(void)
+{
+    HMC830_HMC_Write_REFDIV(1);
+    HMC830_HMC_Write_PFD_General_Setting(HMC830_INTEGER_MODE);
+    HMC830_HMC_Write_Charge_Pump_Current(2.54, HMC830_INTEGER_MODE, 3000, 50);
+    HMC830_HMC_Write_VCO_General_Setting(30, HMC830_VCO_REG02H_GAIN_3);
+    HMC830_HMC_Write_NDIV(60.0);
+}
+
+void HMC830_HMC_Test_REF50M_425M(void)
+{
+    HMC830_HMC_Write_REFDIV(1);
+    HMC830_HMC_Write_PFD_General_Setting(HMC830_INTEGER_MODE);
+    HMC830_HMC_Write_Charge_Pump_Current(2.54, HMC830_INTEGER_MODE, 2550, 50);
+    HMC830_HMC_Write_VCO_General_Setting(6, HMC830_VCO_REG02H_GAIN_3);
+    HMC830_HMC_Write_NDIV(51.0);
+}
+
+void HMC830_HMC_Test_REF50M_650M(void)
+{
+    HMC830_HMC_Write_REFDIV(1);
+    HMC830_HMC_Write_PFD_General_Setting(HMC830_INTEGER_MODE);
+    HMC830_HMC_Write_Charge_Pump_Current(2.54, HMC830_INTEGER_MODE, 2600, 50);
+    HMC830_HMC_Write_VCO_General_Setting(4, HMC830_VCO_REG02H_GAIN_3);
+    HMC830_HMC_Write_NDIV(52.0);
 }
